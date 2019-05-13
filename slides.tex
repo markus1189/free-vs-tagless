@@ -1,0 +1,166 @@
+ \documentclass[aspectratio=169]{beamer}
+
+% Must be loaded first
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning,fit,calc}
+
+\usepackage[utf8]{inputenc}
+\usepackage{textpos}
+
+% Font configuration
+\usepackage{fontspec}
+
+\usepackage[listings, minted]{tcolorbox}
+\usepackage{smartdiagram}
+\usepackage[export]{adjustbox}
+
+\input{font.tex}
+
+% Tikz for beautiful drawings
+\usetikzlibrary{mindmap,backgrounds}
+\usetikzlibrary{arrows.meta,arrows}
+\usetikzlibrary{shapes.geometric}
+
+% Minted configuration for source code highlighting
+\usepackage{minted}
+\setminted{highlightcolor=orange!50, linenos}
+\setminted{style=lovelace}
+
+\usepackage[listings, minted]{tcolorbox}
+\tcbset{left=6mm}
+
+% Use the include theme
+\usetheme{codecentric}
+
+% Metadata
+\title{Free vs Final Tagless}
+\author{Markus Hauck (@markus1189)}
+
+% The presentation content
+\begin{document}
+
+\begin{frame}[noframenumbering,plain]
+  \titlepage{}
+\end{frame}
+
+\section{Introduction}\label{sec:introduction}
+
+\begin{frame}
+  \begin{center}
+    {\Huge Composition\\}
+    (how to do more with less)
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Content}
+  \begin{center}
+    \resizebox{!}{0.8\textheight}{
+      \smartdiagram[bubble diagram]{
+        Content,
+        2 Monoids,
+        1 Introduction,
+        5 Conclusion,
+        4 Streaming,
+        3 Applicatives
+      }
+    }
+  \end{center}
+\end{frame}
+
+\section{Finally Tagless}\label{sec:finally-tagless}
+
+\section{Free}\label{sec:free}
+
+\begin{frame}
+  \begin{itemize}
+  \item also: initial encoding
+  \item use data structure to capture the program
+  \item traverse this structure using interpreter
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Free \textemdash{} Pros and Cons}
+  \begin{itemize}
+  \item program reified as a data structure
+  \item allows inspection and transformation
+  \item can be serialized
+  \end{itemize}
+\end{frame}
+
+\section{Free vs Finally Tagless}\label{sec:free-vs-tagless}
+
+\begin{frame}
+  \frametitle{Free vs Finally Tagless}
+  \begin{itemize}
+  \item seen both approaches
+  \item but important question: when to use which
+  \item spoiler: it depends
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{When To Use Free}
+  \begin{itemize}
+  \item doing a lot of transformation/optimization
+  \item ability to serialize/deserialize program
+  \item doing partial evaluation
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{When To Use Finally Tagless}
+  \begin{itemize}
+  \item programs are inspected max once
+  \item executed a lot more than inspected
+  \item no need to keep around the data structure at all
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{When To Use Both}
+  \begin{itemize}
+  \item saw: reason for either one
+  \item can we have our cake and eat it, too?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Converting from Free to Finally Tagless}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Converting from Finally Tagless to Free}
+\end{frame}
+
+\section{Conclusion}\label{sec:conclusion}
+
+\begin{frame}
+  \frametitle{Conclusion}
+  \begin{itemize}
+  \item flexible and \texttt{composable} way to cacluate metrics over text
+  \item using \texttt{Monoid} and \texttt{Applicative}
+  \item works with iteration and streaming
+  \item Principle Of Least Power: sometimes Monads are overrated
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The End}
+  \begin{itemize}
+  \item \hyperref[sec:introduction]{Introduction}
+  \item \hyperref[sec:monoids]{Monoids}
+  \item \hyperref[sec:applicatives]{Applicatives}
+  \item \hyperref[sec:streaming]{Streaming}
+  \item \hyperref[sec:conclusion]{Conclusion}
+  \end{itemize}
+  \vfill
+  \begin{center}
+    \url{https://github.com/markus1189/flatmap-beautiful-composition}
+  \end{center}
+\end{frame}
+
+\appendix{}
+
+\end{document}
