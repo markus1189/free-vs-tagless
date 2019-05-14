@@ -68,15 +68,36 @@
   \end{center}
 \end{frame}
 
-\section{Finally Tagless}\label{sec:finally-tagless}
+\begin{frame}
+  \frametitle{The Toy Language}
+  \begin{itemize}
+  \item toy language with operations
+  \item integer constants
+  \item integer addition
+  \item string constants
+  \item string concatenation
+  \end{itemize}
+\end{frame}
 
 \section{Free}\label{sec:free}
 
 \begin{frame}
   \begin{itemize}
-  \item also: initial encoding
+  \item also: tagged initial encoding
+  \item ``tagged'' because sum types are represented at runtime as
+    pairs (tag, payload), the tag is used in ``eval'' to do pattern
+    matching
   \item use data structure to capture the program
   \item traverse this structure using interpreter
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Tags}
+  \begin{itemize}
+  \item untyped representation that allows invalid constants
+  \item GADT makes wrong expression not representable
+  \item tagged and tagless initial encoding possible
   \end{itemize}
 \end{frame}
 
@@ -86,6 +107,46 @@
   \item program reified as a data structure
   \item allows inspection and transformation
   \item can be serialized
+  \end{itemize}
+
+  \section{Finally Tagless}\label{sec:finally-tagless}
+
+\begin{frame}
+  \begin{itemize}
+  \item use overloaded functions (all the way)
+  \item use denotation in semantic algebra and not AST
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Expression Problem}
+  \begin{itemize}
+  \item extremely nice property of finally tagless
+  \item extensibility in two dimensions
+  \item neat way to solve expression problem!
+  \end{itemize}
+\end{frame}
+
+\end{frame}
+
+\section{Optimization And Inspection}\label{sec:optimization-and-inspection}
+
+\begin{frame}
+  \frametitle{Optimization}
+  \begin{itemize}
+  \item time to talk about program optimization and transformation
+  \item start with Free, then finally tagless
+  \item myth: not possible in finally tagless, which is wrong
+  \item instantiate interpreter that keeps track of information that is passed down
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Analyzing Programs}
+  \begin{itemize}
+  \item in both approaches: level of introspection depends
+  \item if you use Monad, very limited
+  \item the more you represent, the more power
   \end{itemize}
 \end{frame}
 
