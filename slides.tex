@@ -1,4 +1,4 @@
- \documentclass[aspectratio=169]{beamer}
+\documentclass[aspectratio=169]{beamer}
 
 % Must be loaded first
 \usepackage{tikz}
@@ -85,7 +85,7 @@
   \begin{quote}
     There are two basic approaches to embedding languages and writing
     their interpreters, which we shall call, somewhat informally,
-    ‘initial’ and ‘final’. Theinitial approach represents a term of an
+    ‘initial’ and ‘final’. The initial approach represents a term of an
     object language as a value of an algebraic data type in the
     metalanguage; interpreters recursively traverse the values
     de-constructing them by pattern-matching. In the final approach,
@@ -124,6 +124,15 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Tagless Final Encoding}
+  \begin{itemize}
+  \item use typeclasses and functions
+  \item interpreter are defined as an instance of the typeclass
+  \item type safety built in
+  \end{itemize}
+\end{frame}
+
 \section{Free}\label{sec:free}
 
 \begin{frame}
@@ -153,8 +162,9 @@
   \item allows inspection and transformation
   \item can be serialized
   \end{itemize}
+\end{frame}
 
-  \section{Finally Tagless}\label{sec:finally-tagless}
+\section{Finally Tagless}\label{sec:finally-tagless}
 
 \begin{frame}
   \begin{itemize}
@@ -170,8 +180,6 @@
   \item extensibility in two dimensions
   \item neat way to solve expression problem!
   \end{itemize}
-\end{frame}
-
 \end{frame}
 
 \section{Optimization And Inspection}\label{sec:optimization-and-inspection}

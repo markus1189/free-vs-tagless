@@ -11,14 +11,15 @@ object Expr {
   def intLit(value: Int): Expr[Int] = IntLit(value)
   def add(e1: Expr[Int], e2: Expr[Int]) = Add(e1, e2)
 
-  def intLit(value: String): Expr[String] = StrLit(value)
+  def strLit(value: String): Expr[String] = StrLit(value)
   def concat(e1: Expr[String], e2: Expr[String]) = Concat(e1, e2)
 
   def strToInt(e: Expr[String]): Expr[Int] = StrToInt(e)
 }
 
 object Interpreter {
-  def sampleProgram: Expr[Int] = StrToInt(Concat(StrLit("4"), StrLit("2")))
+  import Expr._
+  def sampleProgram: Expr[Int] = strToInt(concat(strLit("4"), strLit("2")))
 
   // does no longer compile:
   // def problematic = StrToInt(IntLit(42))
