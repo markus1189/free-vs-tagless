@@ -1,5 +1,6 @@
 package de.codecentric.`final`
 
+//snippet:final-tagless-expr
 trait ExprSym[Expr[_]] {
   def intLit(value: Int): Expr[Int]
   def add(e1: Expr[Int], e2: Expr[Int]): Expr[Int]
@@ -9,8 +10,10 @@ trait ExprSym[Expr[_]] {
 
   def strToInt(e: Expr[String]): Expr[Int]
 }
+//snippet:end
 
 object ExprSym {
+  //snippet:final-tagless-interp
   case class Interp[A](value: A) extends AnyVal
 
   implicit val exprSymInterp: ExprSym[Interp] = new ExprSym[Interp] {
@@ -28,9 +31,12 @@ object ExprSym {
     override def strToInt(e: Interp[String]): Interp[Int] =
       Interp(e.value.toInt)
   }
+  //snippet:end
 
+  //snippet:final-tagless-sample
   def sampleProgram[F[_]](implicit expr: ExprSym[F]): F[Int] = {
     import expr._
     strToInt(concat(strLit("4"), strLit("2")))
   }
+  //snippet:end
 }

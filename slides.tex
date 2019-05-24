@@ -1,4 +1,4 @@
-\documentclass[aspectratio=169]{beamer}
+\documentclass[aspectratio=169, hyperref={colorlinks, linkcolor=beamer@centricgreen}, urlcolor=links]{beamer}
 
 % Must be loaded first
 \usepackage{tikz}
@@ -47,7 +47,7 @@
 
 \begin{frame}
   \begin{center}
-    {\Huge Free vs Tagless\\}
+    {\Huge Free vs Tagless}
   \end{center}
 \end{frame}
 
@@ -55,6 +55,7 @@
   \frametitle{Content}
   \begin{itemize}
   \item start with the basics from Oleg's excellent paper
+  \item \href{http://okmij.org/ftp/tagless-final/course/index.html}{Typed tagless-final interpretations: Lecture notes}
   \item clarify tagged, tagless, initial and final
   \item relation to Free-X constructions
   \item comparison of both approaches
@@ -76,29 +77,65 @@
 
 \begin{frame}
   \frametitle{Terminology}
-  \begin{itemize}
-  \item http://okmij.org/ftp/tagless-final/course/lecture.pdf
-  \item what does ``finally tagless'' even mean?
-  \item to understand, let's look at some interpreters and our design choices
-  \end{itemize}
 
+  directly from the \href{http://okmij.org/ftp/tagless-final/course/lecture.pdf}{paper}:
+  \vfill
   \begin{quote}
-    There are two basic approaches to embedding languages and writing
-    their interpreters, which we shall call, somewhat informally,
-    ‘initial’ and ‘final’. The initial approach represents a term of an
-    object language as a value of an algebraic data type in the
+    There are \textbf{two basic approaches} to embedding languages and
+    writing their interpreters, which we shall call, somewhat
+    informally, \textbf{initial} and \textbf{final}.
+  \end{quote}
+  \vfill
+  \begin{quote}
+    The \textbf{initial} approach represents a term of an object
+    language \textbf{as a value} of an algebraic data type in the
     metalanguage; interpreters recursively traverse the values
-    de-constructing them by pattern-matching. In the final approach,
-    object language terms are represented as expressions built from a
-    small set of combinators, whichare ordinary functions rather than
-    data constructors.
+    de-constructing them by \textbf{pattern-matching}.
+  \end{quote}
+  \vfill
+  \begin{quote}
+    In the \textbf{final} approach, object language terms are
+    represented as expressions built from a small set of
+    \textbf{combinators}, which are \textbf{ordinary functions} rather
+    than data constructors.
   \end{quote}
 \end{frame}
 
-\begin{frame}
-  \frametitle{A First Interpreter}
+\begin{frame}[fragile]
+  \frametitle{Interpreter: Initial Tagged}
   \begin{itemize}
-  \item simple language: addition, concatenation, literals and conversion
+  \item small language: addition, concatenation, literals and conversion
+  \end{itemize}
+  \begin{minted}{scala}
+    1 + 1
+    "hello," + " world"
+    "42".toInt
+  \end{minted}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interpreter: Initial Tagged}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagged-expr.scala}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interpreter: Initial Tagged}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagged-sample.scala}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interpreter: Initial Tagged}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagged-interp.scala}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interpreter: Initial Tagged}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagged-add.scala}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interpreter: Initial Tagged}
+  \begin{itemize}
   \item problems: have to handle errors in interpreter
   \item should: don't allow invalid programs at all
   \item btw: this is a very nice criteria for \texttt{any} DSL
@@ -125,6 +162,26 @@
 \end{frame}
 
 \begin{frame}
+  \frametitle{Interpreter: Initial Tagless}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-expr.scala}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interpreter: Initial Tagless}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-sample.scala}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interpreter: Initial Tagless}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-interp.scala}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interpreter: Initial Tagless}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-add.scala}
+\end{frame}
+
+\begin{frame}
   \frametitle{Tagless Final Encoding}
   \begin{itemize}
   \item use typeclasses and functions
@@ -133,7 +190,22 @@
   \end{itemize}
 \end{frame}
 
-\section{Free}\label{sec:free}
+\begin{frame}
+  \frametitle{Interpreter: Final Tagless}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-expr.scala}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interpreter: Final Tagless}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-sample.scala}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interpreter: Final Tagless}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-interp.scala}
+\end{frame}
+
+\section{Free And Final Tagless}\label{sec:free-and-final-tagless}
 
 \begin{frame}
   \begin{itemize}
@@ -143,6 +215,16 @@
     matching
   \item use data structure to capture the program
   \item traverse this structure using interpreter
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Tagged Initial Encoding}
+  \begin{itemize}
+  \item Free is an tagged initial encoding
+  \item but a Free X is normally associated to a typeclass + laws
+  \item Free Monad, Free Applicative, Free Monoid
+  \item tagged initial encoding of a typeclass
   \end{itemize}
 \end{frame}
 
@@ -163,8 +245,6 @@
   \item can be serialized
   \end{itemize}
 \end{frame}
-
-\section{Finally Tagless}\label{sec:finally-tagless}
 
 \begin{frame}
   \begin{itemize}
@@ -203,7 +283,7 @@
   \end{itemize}
 \end{frame}
 
-\section{Free vs Finally Tagless}\label{sec:free-vs-tagless}
+\section{Comparison}\label{sec:free-vs-tagless}
 
 \begin{frame}
   \frametitle{Free vs Finally Tagless}
@@ -279,7 +359,7 @@
 \begin{frame}
   \frametitle{References}
   \begin{center}
-    \url{http://okmij.org/ftp/tagless-final/course/lecture.pdf}
+    \href{http://okmij.org/ftp/tagless-final/course/index.html}{Typed tagless-final interpretations: Lecture notes}
   \end{center}
 \end{frame}
 

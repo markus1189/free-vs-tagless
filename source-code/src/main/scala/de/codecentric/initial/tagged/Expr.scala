@@ -2,6 +2,7 @@ package de.codecentric.initial.tagged
 
 import cats.syntax.either._
 
+//snippet:initial-tagged-expr
 sealed abstract class Expr extends Product with Serializable
 final case class IntLit(value: Int) extends Expr
 final case class Add(e1: Expr, e2: Expr) extends Expr
@@ -12,20 +13,26 @@ final case class StrToInt(e: Expr) extends Expr
 sealed abstract class Result
 final case class IntResult(value: Int) extends Result
 final case class StrResult(value: String) extends Result
+//snippet:end
 
 object Interpreter {
+  //snippet:initial-tagged-sample
   def sampleProgram = StrToInt(Concat(StrLit("4"), StrLit("2")))
 
   def problematic = StrToInt(IntLit(42))
+  //snippet:end
 
+  //snippet:initial-tagged-interp
   def interp(e: Expr): Either[String, Result] = e match {
     case IntLit(value)  => IntResult(value).asRight
-    case Add(e1, e2)    => handleAdd(e1, e2)
     case StrLit(value)  => StrResult(value).asRight
+    case Add(e1, e2)    => handleAdd(e1, e2)
     case Concat(e1, e2) => handleConcat(e1, e2)
     case StrToInt(e_)   => handleStrToInt(e_)
   }
+  //snippet:end
 
+  //snippet:initial-tagged-add
   private[this] def handleAdd(e1: Expr, e2: Expr): Either[String, Result] =
     for {
       r1 <- interp(e1)
@@ -35,6 +42,7 @@ object Interpreter {
         case _                              => s"Could not add $r1 and $r2".asLeft
       }
     } yield result
+  //snippet:end
 
   private[this] def handleConcat(e1: Expr, e2: Expr): Either[String, Result] =
     for {
