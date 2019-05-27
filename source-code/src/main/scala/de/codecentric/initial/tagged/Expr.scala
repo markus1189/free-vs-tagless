@@ -17,9 +17,11 @@ final case class StrResult(value: String) extends Result
 
 object Interpreter {
   //snippet:initial-tagged-sample
-  def sampleProgram = StrToInt(Concat(StrLit("4"), StrLit("2")))
+  def sampleProgram: Expr = StrToInt(Concat(StrLit("4"), StrLit("2")))
+  //Scala equivalent: ("4" + "2").toInt
 
-  def problematic = StrToInt(IntLit(42))
+  def problematic: Expr = StrToInt(IntLit(42))
+  //Scala equivalent: 42.toInt
   //snippet:end
 
   //snippet:initial-tagged-interp

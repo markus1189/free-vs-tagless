@@ -14,6 +14,7 @@ object Dependencies {
 
   lazy val spire = "org.typelevel" %% "spire" % spireVersion
   lazy val cats = "org.typelevel" %% "cats-core" % catsVersion
+  lazy val catsFree = "org.typelevel" %% "cats-free" % catsVersion
   lazy val akkaStream = "com.typesafe.akka" %% "akka-stream" % akkaVersion
   lazy val mouse = "org.typelevel" %% "mouse" % mouseVersion
   lazy val catsEffect = "org.typelevel" %% "cats-effect" % catsEffectVersion
@@ -25,7 +26,7 @@ object Dependencies {
   lazy val catsLaws = "org.typelevel" %% "cats-laws" % catsLawsVersion
 
   lazy val libs: Vector[ModuleID] =
-    Vector(spire, cats, akkaStream, mouse, catsEffect, fs2)
+    Vector(spire, cats, akkaStream, mouse, catsEffect, fs2, catsFree)
 
   lazy val testLibs: Vector[ModuleID] =
     Vector(scalaTest, scalaCheck, discipline, catsLaws).map(_ % Test)

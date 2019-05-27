@@ -76,6 +76,13 @@
 \section{Initial vs Final vs Tagged}\label{sec:initial-final-tagged}
 
 \begin{frame}
+  \begin{center}
+    \Huge
+    Initial vs Final vs Tagged
+  \end{center}
+\end{frame}
+
+\begin{frame}
   \frametitle{Terminology}
 
   directly from the \href{http://okmij.org/ftp/tagless-final/course/lecture.pdf}{paper}:
@@ -113,27 +120,27 @@
   \end{minted}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Interpreter: Initial Tagged}
   \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagged-expr.scala}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Interpreter: Initial Tagged}
   \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagged-sample.scala}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Interpreter: Initial Tagged}
   \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagged-interp.scala}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Interpreter: Initial Tagged}
   \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagged-add.scala}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Interpreter: Initial Tagged}
   \begin{itemize}
   \item problems: have to handle errors in interpreter
@@ -156,27 +163,25 @@
   \frametitle{Tagless Initial Encoding}
   \begin{itemize}
   \item get rid of invalid programs using GADTs
-  \item caveat: type inference in Scala\ldots{}
-  \item introduce smart constructors
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Interpreter: Initial Tagless}
   \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-expr.scala}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Interpreter: Initial Tagless}
   \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-sample.scala}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Interpreter: Initial Tagless}
   \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-interp.scala}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Interpreter: Initial Tagless}
   \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-add.scala}
 \end{frame}
@@ -190,50 +195,111 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Interpreter: Final Tagless}
-  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-expr.scala}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/final-tagless-expr.scala}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Interpreter: Final Tagless}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/final-tagless-sample.scala}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Interpreter: Final Tagless}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/final-tagless-interp.scala}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Interpreter: Final Tagless}
-  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-sample.scala}
+  \frametitle{First Summary}
+  \begin{itemize}
+  \item we saw: initial tagged, initial tagless and final tagless
+  \item implemented simple language
+  \item next: compose languages
+  \end{itemize}
+\end{frame}
+
+\section{Composition Of Languages}\label{sec:composition-languages}
+
+\begin{frame}
+  \begin{center}
+    \Huge
+    Composition Of Languages
+  \end{center}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Interpreter: Final Tagless}
-  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-interp.scala}
+  \frametitle{The Expression Problem}
+  \begin{tcolorbox}[
+    fonttitle=\sffamily\bfseries,
+    colbacktitle=black,
+    colframe=black,
+    coltitle=beamer@centricgreen,
+    title=Philip Wadler on 12. November 1998
+    ]
+    The Expression Problem is a new name for an old problem.  The goal
+    is to define a datatype by cases, where one can add new cases to
+    the datatype and new functions over the datatype, without
+    recompiling existing code, and while retaining static type safety
+    (e.g., no casts).
+  \end{tcolorbox}
+  \begin{itemize}
+  \item there are other solutions, but the final encoding is
+    pretty neat (IMHO)
+  \item the initial encoding equivalent is ``Data types a la carte''
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Expression Problem}
+  TODO: show example for final? also for initial? or only mention it?
 \end{frame}
 
 \section{Free And Final Tagless}\label{sec:free-and-final-tagless}
 
 \begin{frame}
-  \begin{itemize}
-  \item also: tagged initial encoding
-  \item ``tagged'' because sum types are represented at runtime as
-    pairs (tag, payload), the tag is used in ``eval'' to do pattern
-    matching
-  \item use data structure to capture the program
-  \item traverse this structure using interpreter
-  \end{itemize}
+  \begin{center}
+    \Huge
+    Free And Final Tagless
+  \end{center}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Tagged Initial Encoding}
+  \frametitle{Free As Initial Encoding}
   \begin{itemize}
   \item Free is an tagged initial encoding
-  \item but a Free X is normally associated to a typeclass + laws
+  \item but a Free X is associated to a \textbf{typeclass} + laws
+  \item the minimal \textbf{initially encoded} structure satisfying
+    the laws
   \item Free Monad, Free Applicative, Free Monoid
-  \item tagged initial encoding of a typeclass
+  \item initial encoding + DSL based on typeclass
   \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Tags}
+  \frametitle{Interpreter: Free Monad}
+  TOOD: code
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interpreter: Free Monad}
   \begin{itemize}
-  \item untyped representation that allows invalid constants
-  \item GADT makes wrong expression not representable
-  \item tagged and tagless initial encoding possible
+  \item we use Monad to embed our language
+  \item extract the real value at every step
+  \item nice: interop with standard Scala
+  \item bad: interpreter fixes sequential evaluation
+  \item but just an example, could've used \texttt{FreeApplicative}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{MTL as Final Encoding}
+  \begin{itemize}
+  \item basic idea: define type class for ``additional'' operations of a special Monad
+  \item e.g.\ accessing state, reading environment, etc.
+  \item implemented in the \texttt{mtl} package in Haskell
+  \item commonly referred to as ``mtl-style''
+  \item final encoding that uses the special ops as DSL!\@
   \end{itemize}
 \end{frame}
 
@@ -262,13 +328,20 @@
   \end{itemize}
 \end{frame}
 
-\section{Optimization And Inspection}\label{sec:optimization-and-inspection}
+\section{Working With Programs}\label{sec:working-with-programs}
+
+\begin{frame}
+  \begin{center}
+    \Huge
+    Working With Programs
+  \end{center}
+\end{frame}
 
 \begin{frame}
   \frametitle{Optimization}
   \begin{itemize}
   \item time to talk about program optimization and transformation
-  \item start with Free, then finally tagless
+  \item start with Free, then MTL
   \item myth: not possible in finally tagless, which is wrong
   \item instantiate interpreter that keeps track of information that is passed down
   \end{itemize}
@@ -283,7 +356,14 @@
   \end{itemize}
 \end{frame}
 
-\section{Comparison}\label{sec:free-vs-tagless}
+\section{Comparison}\label{sec:comparison}
+
+\begin{frame}
+  \begin{center}
+    \Huge
+    Comparison
+  \end{center}
+\end{frame}
 
 \begin{frame}
   \frametitle{Free vs Finally Tagless}

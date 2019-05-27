@@ -10,21 +10,20 @@ final case class StrToInt(e: Expr[String]) extends Expr[Int]
 //snippet:end
 
 //snippet:initial-tagless-ctors
-object Expr {
-  def intLit(value: Int): Expr[Int] = IntLit(value)
-  def add(e1: Expr[Int], e2: Expr[Int]) = Add(e1, e2)
-
-  def strLit(value: String): Expr[String] = StrLit(value)
-  def concat(e1: Expr[String], e2: Expr[String]) = Concat(e1, e2)
-
-  def strToInt(e: Expr[String]): Expr[Int] = StrToInt(e)
-}
+//object Expr {
+//  def intLit(value: Int): Expr[Int] = IntLit(value)
+//  def add(e1: Expr[Int], e2: Expr[Int]) = Add(e1, e2)
+//
+//  def strLit(value: String): Expr[String] = StrLit(value)
+//  def concat(e1: Expr[String], e2: Expr[String]) = Concat(e1, e2)
+//
+//  def strToInt(e: Expr[String]): Expr[Int] = StrToInt(e)
+//}
 //snippet:end
 
 object Interpreter {
-  import Expr._
   //snippet:initial-tagless-sample
-  def sampleProgram: Expr[Int] = strToInt(concat(strLit("4"), strLit("2")))
+  def sampleProgram: Expr[Int] = StrToInt(Concat(StrLit("4"), StrLit("2")))
 
   // does no longer compile:
   // def problematic = StrToInt(IntLit(42))
