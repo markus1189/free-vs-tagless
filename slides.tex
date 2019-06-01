@@ -436,13 +436,23 @@
 
 \begin{frame}[fragile]
   \begin{itemize}
-  \item<1> making the context explicit is non-mechanic
-  \item<1> you lose the pattern matching language from initial
-  \item<1> in a nutshell, this is the big trade-off
-  \item<1> still, you can do every optimization in final \textbf{and} initial
-  \item<1> some things are just really hard (like de-/serialization)
+  \item<1-> making the context explicit is non-mechanic
+  \item<1-> you lose the pattern matching language from initial
+  \item<1-> in a nutshell, this is the big trade-off
+  \item<1-> still, you can do every optimization in final \textbf{and} initial
+  \item<1-> some things are just really hard (like de-/serialization)
   \item<2> State Monad anyone?
   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Final vs Initial: Final2Initial}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/final-to-initial.scala}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Final vs Initial: Initial2Final}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-to-final.scala}
 \end{frame}
 
 \section{Free And MTL}\label{sec:free-and-mtl}
