@@ -1,8 +1,7 @@
 package de.codecentric.free
 
-import cats.{Monad, ~>}
 import cats.free.Free
-import spire.algebra.free.FreeAbGroup
+import cats.{Monad, ~>}
 
 sealed abstract class ExprF[A] extends Product with Serializable
 final case class IntLit(value: Int) extends ExprF[Int]
@@ -31,8 +30,8 @@ object Interpreter {
     for {
       four <- strLit("4")
       two <- strLit("2")
-      concatenad <- concat(four, two)
-      result <- strToInt(concatenad)
+      concatenated <- concat(four, two)
+      result <- strToInt(concatenated)
     } yield result
 
   //snippet:free-interp

@@ -219,14 +219,7 @@
   \end{itemize}
 \end{frame}
 
-\section{Composition Of Languages}\label{sec:composition-languages}
-
-\begin{frame}
-  \begin{center}
-    \Huge
-    Composition Of Languages
-  \end{center}
-\end{frame}
+\section{Case Study: Adding If}\label{sec:case-study-if}
 
 \begin{frame}
   \frametitle{The Expression Problem}
@@ -251,23 +244,220 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{The Expression Problem}
-  TODO: show example for final? also for initial? or only mention it?
+  \begin{center}
+    \Huge
+    Case Study: Adding ``if''
+  \end{center}
 \end{frame}
 
-\section{Free And Final Tagless}\label{sec:free-and-final-tagless}
+\begin{frame}
+  \frametitle{Case Study: Adding ``if''}
+  \begin{itemize}
+  \item the goal is to add the ``if'' to our language
+  \item do it for
+    \begin{itemize}
+    \item initial tagless
+    \item final tagless
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Case Study: If with Initial Tagless}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-expr-if.scala}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Case Study: If with Initial Tagless}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-sample-if.scala}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Case Study: If with Initial Tagless}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-interp-if.scala}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Case Study: If with Initial Tagless}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-handle-if.scala}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Case Study: If with Initial Tagless}
+  \begin{itemize}
+  \item this is what the expression problem is all about
+  \item had to touch the language and \textbf{all} interpreters
+  \item problem: what if we regularly extend the language?
+  \item better: if we could compose languages instead of changing
+  \item initial solution: datatypes a la carte
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Datatypes a la carte}
+  \begin{itemize}
+  \item TODO: link to paper
+  \item demonstrating the use of fixed point and parameterized expressions over a type constructor
+  \item use a typeclass to inject languages into a coproduct
+  \item in cats: \textbf{InjectK} and \texttt{Inject}
+  \item but in summary: big pain, you probably don't want to go there
+  \item instead: let's look at final tagless version
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Case Study: If with Final Tagless}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/final-tagless-expr-if.scala}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Case Study: If with Final Tagless}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/final-tagless-sample-if.scala}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Case Study: If with Final Tagless}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/final-tagless-interp-if.scala}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Case Study: If with Final Tagless}
+  \begin{itemize}
+  \item no need to touch \texttt{Interp} class, just add an instance
+  \item we are able to re-use the \textbf{ExprSym} in programs
+  \item this solves the expression problem, we did not have to change existing things
+  \item and without all the hassle of \texttt{Inject} and datatypes a la carte
+  \item this is the big advantage of the final tagless encoding
+  \end{itemize}
+\end{frame}
+
+\section{Working With Programs}\label{sec:working-with-programs}
 
 \begin{frame}
   \begin{center}
     \Huge
-    Free And Final Tagless
+    Working With Programs
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Optimization}
+  \begin{itemize}
+  \item time to talk about program optimization and transformation
+  \item DSL:\@ program is written once, interpreted many times
+  \item myth: inspection/transformation impossible in finally tagless
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Optimization: Inlining of Addition}
+  \begin{itemize}
+  \item goal: inline addition with literals
+  \item i.e.\@ all \texttt{Add} with only \texttt{IntLit} children
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Optimization: Inlining of Addition}
+  {
+    \tikzstyle{level 1}=[sibling distance=10em]
+    \tikzstyle{level 2}=[sibling distance=6em]
+%
+    \begin{columns}
+      \begin{column}{0.5\textwidth}
+        \begin{center}
+          \begin{tikzpicture}[every node/.style = {shape=rectangle, rounded corners, draw, align=center}]]
+            \node {Add}
+            child { node[fill=beamer@centricgreen] {Add}
+              child { node[fill=beamer@centricgreen] {IntLit(21) } }
+              child { node[fill=beamer@centricgreen] {IntLit(21) } }
+            }
+            child { node {StrToInt}
+              child { node {StrLit("0") } }
+            };
+          \end{tikzpicture}
+        \end{center}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        \begin{center}
+          \begin{tikzpicture}[every node/.style = {shape=rectangle, rounded corners, draw, align=center}]]
+            \node {Add}
+            child { node[fill=beamer@centricgreen] {IntLit(42)} }
+            child { node {StrToInt}
+              child { node {StrLit("0") } }
+            };
+          \end{tikzpicture}
+        \end{center}
+      \end{column}
+    \end{columns}
+  }
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Initial Encoding: Inlining of Addition}
+  \begin{itemize}
+  \item initial encoding: we are building the tree and use pattern matching
+  \item the program tree looks like this in the DSL
+  \end{itemize}
+  \vspace{5mm}
+  \begin{minted}{scala}
+    Add(Add(IntLit(21), IntLit(21)), StrToInt(StrLit("0")))
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Initial Encoding: Inlining of Addition}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/optimizer-inline-addition.scala}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Final Encoding: Inlining of Addition}
+  \begin{itemize}
+  \item with the final encoding there is no program
+  \item no pattern matching on the AST
+  \item trick: explicate the necessary context using a special instance
+  \item keep track of predecessors during traversal
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Initial Encoding: Inlining of Addition}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/final-tagless-opt-ctx.scala}
+  \vfill{}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/final-tagless-opt-type.scala}
+  \vfill{}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/final-tagless-opt-sig.scala}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Initial Encoding: Inlining of Addition}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/final-tagless-opt-impl.scala}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{itemize}
+  \item<1> making the context explicit is non-mechanic
+  \item<1> you lose the pattern matching language from initial
+  \item<1> in a nutshell, this is the big trade-off
+  \item<1> still, you can do every optimization in final \textbf{and} initial
+  \item<1> some things are just really hard (like de-/serialization)
+  \item<2> State Monad anyone?
+  \end{itemize}
+\end{frame}
+
+\section{Free And MTL}\label{sec:free-and-mtl}
+
+\begin{frame}
+  \begin{center}
+    \Huge
+    Free And MTL
   \end{center}
 \end{frame}
 
 \begin{frame}
   \frametitle{Free As Initial Encoding}
   \begin{itemize}
-  \item Free is an tagged initial encoding
+  \item Free is an initial encoding
   \item but a Free X is associated to a \textbf{typeclass} + laws
   \item the minimal \textbf{initially encoded} structure satisfying
     the laws
@@ -287,6 +477,7 @@
   \item we use Monad to embed our language
   \item extract the real value at every step
   \item nice: interop with standard Scala
+  \item nice: lots of combinators for monads exist already
   \item bad: interpreter fixes sequential evaluation
   \item but just an example, could've used \texttt{FreeApplicative}
   \end{itemize}
@@ -313,6 +504,15 @@
 \end{frame}
 
 \begin{frame}
+  \frametitle{Analyzing Programs}
+  \begin{itemize}
+  \item in both approaches: level of introspection depends
+  \item if you use Monad, very limited
+  \item the more you represent, the more power
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
   \begin{itemize}
   \item use overloaded functions (all the way)
   \item use denotation in semantic algebra and not AST
@@ -325,34 +525,6 @@
   \item extremely nice property of finally tagless
   \item extensibility in two dimensions
   \item neat way to solve expression problem!
-  \end{itemize}
-\end{frame}
-
-\section{Working With Programs}\label{sec:working-with-programs}
-
-\begin{frame}
-  \begin{center}
-    \Huge
-    Working With Programs
-  \end{center}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Optimization}
-  \begin{itemize}
-  \item time to talk about program optimization and transformation
-  \item start with Free, then MTL
-  \item myth: not possible in finally tagless, which is wrong
-  \item instantiate interpreter that keeps track of information that is passed down
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Analyzing Programs}
-  \begin{itemize}
-  \item in both approaches: level of introspection depends
-  \item if you use Monad, very limited
-  \item the more you represent, the more power
   \end{itemize}
 \end{frame}
 
