@@ -9,6 +9,7 @@ final case class Add(e1: Expr[Int], e2: Expr[Int]) extends Expr[Int]
 final case class StrLit(value: String) extends Expr[String]
 final case class Concat(e1: Expr[String], e2: Expr[String]) extends Expr[String]
 final case class StrToInt(e: Expr[String]) extends Expr[Int]
+
 final case class BoolLit(value: Boolean) extends Expr[Boolean]
 final case class If[A](condition: Expr[Boolean],
                        ifTrue: () => Expr[A],

@@ -4,7 +4,7 @@ import de.codecentric.`final`.ExprSym
 import de.codecentric.`final`.optimization.Ctx._
 
 //snippet:final-tagless-opt-ctx
-sealed abstract class Ctx
+sealed abstract class Ctx // explicit context needed
 object Ctx {
   case class CtxInt(value: Int) extends Ctx
   case object CtxAdd extends Ctx
@@ -30,6 +30,7 @@ object Opt {
     new ExprSym[Opt[F, ?]] {
 
       //snippet:final-tagless-opt-impl
+// def inlineAdditionExprSym[F[_])(...) = {
       override def intLit(value: Int): Opt[F, Int] =
         Opt(ctx => (CtxInt(value) :: ctx, base.intLit(value)))
 
@@ -44,6 +45,9 @@ object Opt {
             case _ => (CtxAdd :: ctx2, base.add(v1, v2))
           }
       }
+
+      // more overrides...
+// }
       //snippet:end
 
       override def strLit(value: String): Opt[F, String] =

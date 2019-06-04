@@ -152,7 +152,7 @@
 \begin{frame}
   \frametitle{Tagged Initial Encoding}
   \begin{itemize}
-  \item initial encoding =
+  \item initial encoding = data structure + \texttt{Result} union + error handling
   \item ``tagged union'' a.k.a.\ sum types in type theory
   \item this ``tag'' is used for pattern matching
   \item programs are first class, store as data etc
@@ -420,8 +420,36 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Final Encoding: Inlining of Addition}
+  \begin{center}
+    \tikzstyle{level 1}=[sibling distance=14em]
+    \tikzstyle{level 2}=[sibling distance=7em]
+%
+    \begin{tikzpicture}[every node/.style = {shape=rectangle, rounded corners, draw, align=center}]]
+      \node {Add [1,7,11]}
+      child { node[fill=beamer@centricgreen] {Add [2,4,6]}
+        child { node[fill=beamer@centricgreen] {IntLit(21) [3]} }
+        child { node[fill=beamer@centricgreen] {IntLit(21) [5]} }
+      }
+      child { node {StrToInt [8,10]}
+        child { node {StrLit("0") [9]} }
+      };
+    \end{tikzpicture}
+    \vfill{}
+%
+    {
+      \footnotesize
+      \begin{tabular}{c c c c c c c c c c c}
+        1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11\\
+        Add & Add & IntLit(21) & Add & IntLit(21) & Add & Add & StrToInt & StrLit(0) & StrToInt & Add
+      \end{tabular}
+    }
+  \end{center}
+\end{frame}
+
 \begin{frame}[fragile]
-  \frametitle{Initial Encoding: Inlining of Addition}
+  \frametitle{Final Encoding: Inlining of Addition}
   \inputminted[fontsize=\footnotesize]{scala}{snippets/final-tagless-opt-ctx.scala}
   \vfill{}
   \inputminted[fontsize=\footnotesize]{scala}{snippets/final-tagless-opt-type.scala}
@@ -430,11 +458,12 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Initial Encoding: Inlining of Addition}
+  \frametitle{Final Encoding: Inlining of Addition}
   \inputminted[fontsize=\footnotesize]{scala}{snippets/final-tagless-opt-impl.scala}
 \end{frame}
 
 \begin{frame}[fragile]
+  \frametitle{Final Encoding: Inlining of Addition}
   \begin{itemize}
   \item<1-> making the context explicit is non-mechanic
   \item<1-> you lose the pattern matching language from initial
@@ -444,6 +473,10 @@
   \item<2> State Monad anyone?
   \item<2> Quiz: what is the problem with this interpreter?
   \end{itemize}
+  \vfill{}
+  \only<2>{
+    \inputminted[fontsize=\footnotesize]{scala}{snippets/final-tagless-opt-type.scala}
+  }
 \end{frame}
 
 \section{Free And MTL}\label{sec:free-and-mtl}
@@ -453,12 +486,6 @@
     \Huge
     Free And MTL
   \end{center}
-\end{frame}
-
-\begin{frame}
-  \begin{itemize}
-  \item but what about free and mtl?!
-  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -569,26 +596,35 @@
   \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-to-final.scala}
 \end{frame}
 
-\begin{frame}
-  \frametitle{When To Use Initial and Free}
-  \begin{itemize}
-  \item doing a lot of transformation/optimization
-  \item ability to serialize/deserialize program
-  \item doing partial evaluation
-  \item pass around programs in data structures
-  \item type safety via ``tagless'' representation often requires GADT
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{When To Use Final and MTL}
-  \begin{itemize}
-  \item programs are inspected max once
-  \item executed a lot more than inspected
-  \item no need to keep around the data structure at all
-  \item nicely solves the expression problem (no small feat)
-  \item trivial to compose different languages
-  \end{itemize}
+\begin{frame}[t]
+  \small{}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      Initial Tagless Encoding / Free X
+      \begin{itemize}
+      \item programs are first class
+      \item \textbf{easy} to add interpreters, \textbf{hard} to change language
+      \item hard to compose languages
+      \item easy to optimize/transform/serialize/partially evaluate
+      \item need \textbf{Monad}, use \textbf{final tagless}!
+      \item structure built and torn down again
+      \item requires GADTs to get type safety
+      \item \textbf{inspect} more often than evaluate
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      Final Tagless Encoding / MTL
+      \begin{itemize}
+      \item passing around programs as arguments can get tricky
+      \item easy to add interpreters \textbf{and} extend language and compose
+      \item harder to optimize/transform/serialize/partially evaluate
+      \item flexible choice of typeclass constraint
+      \item execution is faster because no structure is built
+      \item it's only typeclasses and instances
+      \item \textbf{evaluate} more often than inspect
+      \end{itemize}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \section{Conclusion}\label{sec:conclusion}
@@ -596,12 +632,12 @@
 \begin{frame}
   \frametitle{Conclusion}
   \begin{itemize}
-  \item overview of final and tagless encodings
+  \item overview of final and tagless encoding
   \item going from tagged to tagless
   \item going from initial tagless to final tagless
   \item relation between initial / final and free
   \item optimization / introspection of programs
-  \item some guidelines on what to choose
+  \item guidelines when to choose what
   \end{itemize}
 \end{frame}
 
@@ -620,10 +656,16 @@
 \begin{frame}
   \frametitle{References}
   \begin{center}
-    \href{http://okmij.org/ftp/tagless-final/course/index.html}{Typed tagless-final interpretations: Lecture notes}
+    \begin{itemize}
+    \item Typed tagless-final interpretations, lecture notes: \href{http://okmij.org/ftp/tagless-final/course/index.html}{http://okmij.org/ftp/tagless-final/course/index.html}
+    \item Datatypes a la carte: TODO
+    \item Source Code: \href{https://github.com/markus1189/free-vs-tagless}{https://github.com/markus1189/free-vs-tagless}
+    \end{itemize}
   \end{center}
 \end{frame}
 
 \appendix{}
 
 \end{document}
+
+% LocalWords:  tagless
