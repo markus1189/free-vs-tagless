@@ -1,7 +1,6 @@
 package de.codecentric.`final`.optimization
 
 import de.codecentric.`final`.ExprSym
-import de.codecentric.`final`.ExprSym.{Interp, Print}
 import de.codecentric.`final`.optimization.Ctx._
 
 //snippet:final-tagless-opt-ctx
@@ -19,16 +18,16 @@ case class Opt[F[_], A](run: List[Ctx] => (List[Ctx], F[A]))
 
 object Snippet {
   //snippet:final-tagless-opt-sig
-  // Using kind-projector for Lambda
+  // Using kind-projector
   implicit def inlineAdditionExprSym[F[_]](
-      implicit base: ExprSym[F]): ExprSym[Lambda[x => Opt[F, x]]] = ???
+      implicit base: ExprSym[F]): ExprSym[Opt[F, ?]] = ???
   //snippet:end
 }
 
 object Opt {
   implicit def inlineAdditionExprSym[F[_]](
-      implicit base: ExprSym[F]): ExprSym[Lambda[x => Opt[F, x]]] = {
-    new ExprSym[Lambda[x => Opt[F, x]]] {
+      implicit base: ExprSym[F]): ExprSym[Opt[F, ?]] = {
+    new ExprSym[Opt[F, ?]] {
 
       //snippet:final-tagless-opt-impl
       override def intLit(value: Int): Opt[F, Int] =
@@ -64,27 +63,4 @@ object Opt {
       }
     }
   }
-}
-
-object Test extends App {
-  def p[F[_]](implicit lang: ExprSym[F]) = {
-    import lang._
-
-    add(add(intLit(5), intLit(6)), strToInt(strLit("0")))
-  }
-
-  def p2[F[_]](implicit lang: ExprSym[F]) = {
-    import lang._
-
-    add(add(intLit(1), intLit(2)), add(intLit(3), intLit(4)))
-  }
-
-  type OptInterp[A] = Opt[Interp, A]
-
-  println(p2[OptInterp].run(List()))
-
-  type OptPrint[A] = Opt[Print, A]
-
-  println(s"Pretty: ${p[Print].value}")
-  println(s"OptPretty: ${p[OptPrint].run(List())._2.value}")
 }

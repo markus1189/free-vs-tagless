@@ -442,17 +442,8 @@
   \item<1-> still, you can do every optimization in final \textbf{and} initial
   \item<1-> some things are just really hard (like de-/serialization)
   \item<2> State Monad anyone?
+  \item<2> Quiz: what is the problem with this interpreter?
   \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Final vs Initial: Final2Initial}
-  \inputminted[fontsize=\footnotesize]{scala}{snippets/final-to-initial.scala}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Final vs Initial: Initial2Final}
-  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-to-final.scala}
 \end{frame}
 
 \section{Free And MTL}\label{sec:free-and-mtl}
@@ -462,6 +453,12 @@
     \Huge
     Free And MTL
   \end{center}
+\end{frame}
+
+\begin{frame}
+  \begin{itemize}
+  \item but what about free and mtl?!
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -478,7 +475,22 @@
 
 \begin{frame}
   \frametitle{Interpreter: Free Monad}
-  TOOD: code
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-free-expr.scala}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interpreter: Free Monad}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-free-ctors.scala}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interpreter: Free Monad}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-free-sample.scala}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interpreter: Free Monad}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-free-interp.scala}
 \end{frame}
 
 \begin{frame}
@@ -505,36 +517,26 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Free \textemdash{} Pros and Cons}
-  \begin{itemize}
-  \item program reified as a data structure
-  \item allows inspection and transformation
-  \item can be serialized
-  \end{itemize}
+  \frametitle{Interpreter: MTL}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/final-mtl-expr.scala}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Analyzing Programs}
-  \begin{itemize}
-  \item in both approaches: level of introspection depends
-  \item if you use Monad, very limited
-  \item the more you represent, the more power
-  \end{itemize}
+  \frametitle{Interpreter: MTL}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/final-mtl-sample.scala}
 \end{frame}
 
 \begin{frame}
-  \begin{itemize}
-  \item use overloaded functions (all the way)
-  \item use denotation in semantic algebra and not AST
-  \end{itemize}
+  \frametitle{Interpreter: MTL}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/final-mtl-interp.scala}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Expression Problem}
+  \frametitle{Interpreter: MTL}
   \begin{itemize}
-  \item extremely nice property of finally tagless
-  \item extensibility in two dimensions
-  \item neat way to solve expression problem!
+  \item sequencing no longer part of our language (Monad)
+  \item flexible choice of target Monad for pluggable effects
+  \item we can choose between type classes easily (vs. Free-X)
   \end{itemize}
 \end{frame}
 
@@ -553,11 +555,22 @@
   \item seen both approaches
   \item but important question: when to use which
   \item spoiler: it depends
+  \item but first: conversion between the two
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Final vs Initial: Final2Initial}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/final-to-initial.scala}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Final vs Initial: Initial2Final}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-to-final.scala}
+\end{frame}
+
 \begin{frame}
-  \frametitle{When To Use Free}
+  \frametitle{When To Use Initial and Free}
   \begin{itemize}
   \item doing a lot of transformation/optimization
   \item ability to serialize/deserialize program
@@ -568,7 +581,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{When To Use Finally Tagless}
+  \frametitle{When To Use Final and MTL}
   \begin{itemize}
   \item programs are inspected max once
   \item executed a lot more than inspected
@@ -578,44 +591,30 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}
-  \frametitle{When To Use Both}
-  \begin{itemize}
-  \item saw: reason for either one
-  \item can we have our cake and eat it, too?
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Converting from Free to Finally Tagless}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Converting from Finally Tagless to Free}
-\end{frame}
-
 \section{Conclusion}\label{sec:conclusion}
 
 \begin{frame}
   \frametitle{Conclusion}
   \begin{itemize}
-  \item flexible and \texttt{composable} way to cacluate metrics over text
-  \item using \texttt{Monoid} and \texttt{Applicative}
-  \item works with iteration and streaming
-  \item Principle Of Least Power: sometimes Monads are overrated
+  \item overview of final and tagless encodings
+  \item going from tagged to tagless
+  \item going from initial tagless to final tagless
+  \item relation between initial / final and free
+  \item optimization / introspection of programs
+  \item some guidelines on what to choose
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{The End}
-  \begin{itemize}
-  \item \hyperref[sec:introduction]{Introduction}
-  \item \hyperref[sec:monoids]{Monoids}
-  \item \hyperref[sec:applicatives]{Applicatives}
-  \item \hyperref[sec:streaming]{Streaming}
-  \item \hyperref[sec:conclusion]{Conclusion}
-  \end{itemize}
-  \vfill
+  \begin{center}
+    {
+      \Huge
+      THANKS!\\
+    }
+    \vfill
+    (@markus1189)
+  \end{center}
 \end{frame}
 
 \begin{frame}

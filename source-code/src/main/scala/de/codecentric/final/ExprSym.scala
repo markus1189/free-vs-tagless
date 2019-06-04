@@ -45,12 +45,15 @@ object ExprSym {
   implicit val expSymPrint: ExprSym[Print] = new ExprSym[Print] {
     override def intLit(value: Int): Print[Int] = Print(s"Int($value)")
 
-    override def add(e1: Print[Int], e2: Print[Int]): Print[Int] = Print(s"(${e1.value} + ${e2.value})")
+    override def add(e1: Print[Int], e2: Print[Int]): Print[Int] =
+      Print(s"(${e1.value} + ${e2.value})")
 
     override def strLit(value: String): Print[String] = Print(s"Str($value)")
 
-    override def concat(e1: Print[String], e2: Print[String]): Print[String] = Print(s"(${e1.value} + ${e2.value})")
+    override def concat(e1: Print[String], e2: Print[String]): Print[String] =
+      Print(s"(${e1.value} + ${e2.value})")
 
-    override def strToInt(e: Print[String]): Print[Int] = Print(s"str2int(${e.value})")
+    override def strToInt(e: Print[String]): Print[Int] =
+      Print(s"str2int(${e.value})")
   }
 }
