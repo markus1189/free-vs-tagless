@@ -3,7 +3,7 @@ package de.codecentric.`final`.optimization
 import cats.data.Tuple2K
 import de.codecentric.`final`.ExprSym
 
-object Optimizer2 {
+object Lookahead {
   implicit def tupleExprSym[F[_], G[_]](
       implicit F: ExprSym[F],
       G: ExprSym[G]): ExprSym[Tuple2K[F, G, ?]] =
@@ -26,7 +26,7 @@ object Optimizer2 {
         Tuple2K(F.strToInt(e.first), G.strToInt(e.second))
     }
 
-  def optimizer2[F[_]](
+  def lookahead[F[_]](
       implicit base: ExprSym[F]): ExprSym[Tuple2K[Thunk[F, ?], Peek, ?]] =
     new ExprSym[Tuple2K[Thunk[F, ?], Peek, ?]] {
       override def intLit(value: Int): Tuple2K[Thunk[F, ?], Peek, Int] =

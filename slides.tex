@@ -85,7 +85,7 @@
 \begin{frame}
   \frametitle{Terminology}
 
-  directly from the \href{http://okmij.org/ftp/tagless-final/course/lecture.pdf}{paper}:
+  directly from the \href{http://okmij.org/ftp/tagless-final/course/lecture.pdf}{paper} by Oleg Kiselyov:
   \vfill
   \begin{quote}
     There are \textbf{two basic approaches} to embedding languages and
@@ -111,7 +111,7 @@
 \begin{frame}[fragile]
   \frametitle{Interpreter: Initial Tagged}
   \begin{itemize}
-  \item small language: addition, concatenation, literals and conversion
+  \item small language: addition, concatenation, literals and conversion from string to int
   \end{itemize}
   \begin{minted}{scala}
     1 + 1
@@ -162,13 +162,19 @@
 \begin{frame}
   \frametitle{Tagless Initial Encoding}
   \begin{itemize}
-  \item get rid of invalid programs using GADTs
+  \item we saw the problem of invalid programs
+  \item next step: make invalid programs impossible
+  \item Use GADTs: ADTs that refine the type parameter
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Interpreter: Initial Tagless}
   \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-expr.scala}
+  \begin{itemize}
+  \item \texttt{Expr} has a type parameter that is refined in subclasses
+  \item when pattern matching, we can recover this refinement
+  \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -187,11 +193,21 @@
 \end{frame}
 
 \begin{frame}
+  \frametitle{Interpreter: Initial Tagless}
+  \begin{itemize}
+  \item use GADTs and make incorrect programs impossible
+  \item gets rid of Either in the interpretation
+  \item in summary, no reason to choose initial tagged if you have GADTs
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
   \frametitle{Tagless Final Encoding}
   \begin{itemize}
-  \item use typeclasses and functions
-  \item interpreter are defined as an instance of the typeclass
-  \item type safety built in
+  \item totally different idea: avoid data structure
+  \item use typeclass for operations and instances for the concrete implementation
+  \item interpreter are just instances
+  \item you get type safety out of the box (no tagged encoding)
   \end{itemize}
 \end{frame}
 
@@ -219,7 +235,7 @@
   \end{itemize}
 \end{frame}
 
-\section{Case Study: Adding If}\label{sec:case-study-if}
+\section{Case Studies}\label{sec:case-studies}
 
 \begin{frame}
   \frametitle{The Expression Problem}
@@ -231,15 +247,83 @@
     title=Philip Wadler on 12. November 1998
     ]
     The Expression Problem is a new name for an old problem.  The goal
-    is to define a datatype by cases, where one can add new cases to
-    the datatype and new functions over the datatype, without
-    recompiling existing code, and while retaining static type safety
-    (e.g., no casts).
+    is to define a datatype by cases, where one can \textbf{add new
+      cases to the datatype} and \textbf{new functions over the
+      datatype}, without recompiling existing code, and while
+    retaining static type safety (e.g., no casts).
   \end{tcolorbox}
   \begin{itemize}
   \item there are other solutions, but the final encoding is
     pretty neat (IMHO)
   \item the initial encoding equivalent is ``Data types a la carte''
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+    \Huge
+    Case Study: Adding a pretty printer
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Case Study: Adding a pretty printer}
+  \begin{itemize}
+  \item instead of evaluating a program, pretty print it
+  \item by adding a special interpreter
+  \item corresponds to the second case of the expression problem (new function over the datatype)
+  \item start with initial encoding
+  \item then do final encoding
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Initial Encoding: Pretty Printer}
+  \begin{itemize}
+  \item add a new function
+  \item pattern match on our \texttt{Expr} type
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Initial Encoding: Pretty Printer}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-pretty-print.scala}
+  \vspace{5mm}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-pretty-print-example.scala}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Initial Encoding: Pretty Printer}
+  \begin{itemize}
+  \item in general, adding interpreters is easy in the initial encoding
+  \item just define a new function and use pattern matching
+  \item what about final?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Final Encoding: Pretty Printer}
+  \begin{itemize}
+  \item adding a pretty printer means defining a new \texttt{ExprSym} instance
+  \item as usual: define a new type to attach the instance to
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Final Encoding: Pretty Printer}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/final-tagless-pretty-print.scala}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Final Encoding: Pretty Printer}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/final-tagless-pretty-print-example.scala}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Final Encoding: Pretty Printer}
+  \begin{itemize}
+  \item adding an interpreter means writing a typeclass instance
+  \item supports the introduction of new functions over the datatype
   \end{itemize}
 \end{frame}
 
@@ -296,7 +380,7 @@
 \begin{frame}
   \frametitle{Datatypes a la carte}
   \begin{itemize}
-  \item TODO: link to paper
+  \item Wouter Swiestra: \href{https://www.cs.ru.nl/~W.Swierstra/Publications/DataTypesALaCarte.pdf}{Data types 'a la carte}
   \item demonstrating the use of fixed point and parameterized expressions over a type constructor
   \item use a typeclass to inject languages into a coproduct
   \item in cats: \textbf{InjectK} and \texttt{Inject}
@@ -470,13 +554,50 @@
   \item<1-> in a nutshell, this is the big trade-off
   \item<1-> still, you can do every optimization in final \textbf{and} initial
   \item<1-> some things are just really hard (like de-/serialization)
-  \item<2> State Monad anyone?
-  \item<2> Quiz: what is the problem with this interpreter?
+  \item<2-> State Monad anyone?
   \end{itemize}
-  \vfill{}
-  \only<2>{
+  \vspace{3mm}
+  \only<2->{
     \inputminted[fontsize=\footnotesize]{scala}{snippets/final-tagless-opt-type.scala}
   }
+  \vspace{3mm}
+  \begin{itemize}
+  \item<3> Quiz: what is the problem with this interpreter?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Final Encoding: Inlining of Addition}
+  \begin{itemize}
+  \item we \textbf{always} traverse the left branch
+  \end{itemize}
+  \tikzstyle{level 1}=[sibling distance=14em]
+  \tikzstyle{level 2}=[sibling distance=7em]
+  \begin{tikzpicture}[every node/.style = {shape=rectangle, rounded corners, draw, align=center}]]
+    \node {Add [1,7,11]}
+    child { node[fill=beamer@centricgreen] {Add [2,4,6]}
+      child { node[fill=beamer@centricgreen] {IntLit(21) [3]} }
+      child { node[fill=beamer@centricgreen] {IntLit(21) [5]} }
+    }
+    child { node {StrToInt [8,10]}
+      child { node {StrLit("0") [9]} }
+    };
+  \end{tikzpicture}
+  \begin{itemize}
+  \item we should instead look ahead before traversing down
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Final Encoding: Inlining of Addition}
+  \begin{itemize}
+  \item we can do this by writing a more clever instance
+  \item same idea of wrapping a base interpreter
+  \item use a tuple of the actual interpreter (that is delayed using a
+    thunk) and our look ahead interpreter
+  \item for \texttt{add}, first peek at the two branches, only go down if no optimization applies
+  \item full code is on github in the \texttt{Lookahead} object (link at the end)
+  \end{itemize}
 \end{frame}
 
 \section{Free And MTL}\label{sec:free-and-mtl}
@@ -545,7 +666,8 @@
 
 \begin{frame}
   \frametitle{Interpreter: MTL}
-  \inputminted[fontsize=\footnotesize]{scala}{snippets/final-mtl-expr.scala}
+  \only<1>{without mtl:\\\inputminted[fontsize=\footnotesize]{scala}{snippets/final-tagless-expr.scala}}
+  \only<2>{with mtl:\\\inputminted[fontsize=\footnotesize]{scala}{snippets/final-mtl-expr.scala}}
 \end{frame}
 
 \begin{frame}
@@ -582,7 +704,8 @@
   \item seen both approaches
   \item but important question: when to use which
   \item spoiler: it depends
-  \item but first: conversion between the two
+  \item but first: can I have my cake and eat it, too?
+  \item turns out: yes
   \end{itemize}
 \end{frame}
 
@@ -594,6 +717,15 @@
 \begin{frame}[fragile]
   \frametitle{Final vs Initial: Initial2Final}
   \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-to-final.scala}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Final vs Initial}
+  \begin{itemize}
+  \item by going back and forth, you can enjoy the advantages of both approaches
+  \item you don't have to commit to either in your implementations
+  \item example: write complex transformations in initial, ``compile'' back to final for repeated execution
+  \end{itemize}
 \end{frame}
 
 \begin{frame}[t]

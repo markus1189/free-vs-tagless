@@ -1,7 +1,7 @@
 package de.codecentric.`final`.optimization
 
 import de.codecentric.`final`.ExprSym
-import de.codecentric.`final`.ExprSym.{Interp, Print}
+import de.codecentric.`final`.ExprSym.{Interp, PP}
 
 object Main extends App {
   def p[F[_]](implicit lang: ExprSym[F]) = {
@@ -20,11 +20,11 @@ object Main extends App {
 
   println(p2[OptInterp].run(List()))
 
-  type OptPrint[A] = Opt[Print, A]
+  type OptPrint[A] = Opt[PP, A]
 
-  println(s"Pretty: ${p[Print].value}")
+  println(s"Pretty: ${p[PP].value}")
   println(s"OptPretty: ${p[OptPrint].run(List())._2.value}")
 
 
-  println(p2(Optimizer2.optimizer2[Print]).first())
+  println(p2(Lookahead.lookahead[PP]).first())
 }

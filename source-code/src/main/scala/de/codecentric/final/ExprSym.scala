@@ -40,20 +40,33 @@ object ExprSym {
   }
   //snippet:end
 
-  case class Print[A](value: String)
+  //snippet:final-tagless-pretty-print
+  case class PP[A](value: String)
 
-  implicit val expSymPrint: ExprSym[Print] = new ExprSym[Print] {
-    override def intLit(value: Int): Print[Int] = Print(s"Int($value)")
+  implicit val expSymPrint: ExprSym[PP] = new ExprSym[PP] {
+    override def intLit(value: Int): PP[Int] = PP(s"Int($value)")
 
-    override def add(e1: Print[Int], e2: Print[Int]): Print[Int] =
-      Print(s"(${e1.value} + ${e2.value})")
+    override def add(e1: PP[Int], e2: PP[Int]): PP[Int] =
+      PP(s"(${e1.value} + ${e2.value})")
 
-    override def strLit(value: String): Print[String] = Print(s"Str($value)")
+    override def strLit(value: String): PP[String] = PP(s"Str($value)")
 
-    override def concat(e1: Print[String], e2: Print[String]): Print[String] =
-      Print(s"(${e1.value} + ${e2.value})")
+    override def concat(e1: PP[String], e2: PP[String]): PP[String] =
+      PP(s"(${e1.value} + ${e2.value})")
 
-    override def strToInt(e: Print[String]): Print[Int] =
-      Print(s"str2int(${e.value})")
+    override def strToInt(e: PP[String]): PP[Int] =
+      PP(s"str2int(${e.value})")
+  }
+  //snippet:end
+
+  {
+    //snippet:final-tagless-pretty-print-example
+    def sampleProgram[F[_]](implicit expr: ExprSym[F]): F[Int] = {
+      import expr._
+      strToInt(concat(strLit("4"), strLit("2")))
+    }
+
+    sampleProgram[PP].value // => str2int((Str(4) + Str(2)))
+    //snippet:end
   }
 }

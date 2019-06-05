@@ -37,4 +37,21 @@ object Interpreter {
 
   private[this] def handleStrToInt(e: Expr[String]) =
     interp(e).toInt
+
+  //snippet:initial-tagless-pretty-print
+  def prettyPrint[A](e: Expr[A]): String = e match {
+    case IntLit(value) => s"Int($value)"
+    case Add(e1, e2) => s"${prettyPrint(e1)} + ${prettyPrint(e2)}"
+    case StrLit(value) => s"Str($value)"
+    case Concat(e1, e2) => s"${prettyPrint(e1)} + ${prettyPrint(e2)}"
+    case StrToInt(e) => s"str2int(${prettyPrint(e)})"
+  }
+  //snippet:end
+
+  {
+  //snippet:initial-tagless-pretty-print-example
+    def sampleProgram: Expr[Int] = StrToInt(Concat(StrLit("4"), StrLit("2")))
+    prettyPrint(sampleProgram) // => "str2int(Str(4) + Str(2))"
+  //snippet:end
+  }
 }
