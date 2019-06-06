@@ -255,7 +255,7 @@
   \begin{itemize}
   \item there are other solutions, but the final encoding is
     pretty neat (IMHO)
-  \item the initial encoding equivalent is ``Data types a la carte''
+  \item the initial encoding equivalent is ``Data types \`{a} la carte''
   \end{itemize}
 \end{frame}
 
@@ -373,14 +373,14 @@
   \item had to touch the language and \textbf{all} interpreters
   \item problem: what if we regularly extend the language?
   \item better: if we could compose languages instead of changing
-  \item initial solution: datatypes a la carte
+  \item initial solution: datatypes \`{a} la carte
   \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Datatypes a la carte}
+  \frametitle{Datatypes \`{a} la carte}
   \begin{itemize}
-  \item Wouter Swiestra: \href{https://www.cs.ru.nl/~W.Swierstra/Publications/DataTypesALaCarte.pdf}{Data types 'a la carte}
+  \item Wouter Swiestra: \href{https://www.cs.ru.nl/~W.Swierstra/Publications/DataTypesALaCarte.pdf}{Data types \`{a} la carte}
   \item demonstrating the use of fixed point and parameterized expressions over a type constructor
   \item use a typeclass to inject languages into a coproduct
   \item in cats: \textbf{InjectK} and \texttt{Inject}
@@ -410,8 +410,18 @@
   \item no need to touch \texttt{Interp} class, just add an instance
   \item we are able to re-use the \textbf{ExprSym} in programs
   \item this solves the expression problem, we did not have to change existing things
-  \item and without all the hassle of \texttt{Inject} and datatypes a la carte
+  \item and without all the hassle of \texttt{Inject} and datatypes \`{a} la carte
   \item this is the big advantage of the final tagless encoding
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Recap: Case Studies}
+  \begin{itemize}
+  \item initial encoding: easy to add new functions, hard to extend datatype
+  \item datatypes \`{a} la carte can remedy this, at some cost
+  \item final tagless encoding: easy to extend language \textbf{and} easy add new functions
+  \item if you need extensibility in both dimensions, use datatypes \`{a} la carte or final encoding
   \end{itemize}
 \end{frame}
 
@@ -600,6 +610,16 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Recap: Working With Programs}
+  \begin{itemize}
+  \item initial encoding: programs exists as data
+  \item cheap to inspect and transform using pattern matching
+  \item final encoding: programs are functions
+  \item inspection and transformation is possible, but more work
+  \end{itemize}
+\end{frame}
+
 \section{Free And MTL}\label{sec:free-and-mtl}
 
 \begin{frame}
@@ -686,6 +706,14 @@
   \item sequencing no longer part of our language (Monad)
   \item flexible choice of target Monad for pluggable effects
   \item we can choose between type classes easily (vs. Free-X)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Recap: Free vs MTL}
+  \begin{itemize}
+  \item Free X = initial encoding + typeclass X
+  \item MTL = final tagless + typeclass
   \end{itemize}
 \end{frame}
 
@@ -790,7 +818,7 @@
   \begin{center}
     \begin{itemize}
     \item Typed tagless-final interpretations, lecture notes: \href{http://okmij.org/ftp/tagless-final/course/index.html}{http://okmij.org/ftp/tagless-final/course/index.html}
-    \item Datatypes a la carte: TODO
+    \item Datatypes \`{a} la carte: \href{https://www.cs.ru.nl/~W.Swierstra/Publications/DataTypesALaCarte.pdf}{https://www.cs.ru.nl/~W.Swierstra/Publications/DataTypesALaCarte.pdf}
     \item Source Code: \href{https://github.com/markus1189/free-vs-tagless}{https://github.com/markus1189/free-vs-tagless}
     \end{itemize}
   \end{center}
