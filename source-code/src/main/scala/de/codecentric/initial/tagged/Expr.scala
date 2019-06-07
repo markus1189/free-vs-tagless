@@ -9,7 +9,9 @@ final case class Add(e1: Expr, e2: Expr) extends Expr
 final case class StrLit(value: String) extends Expr
 final case class Concat(e1: Expr, e2: Expr) extends Expr
 final case class StrToInt(e: Expr) extends Expr
+//snippet:end
 
+//snippet:initial-tagged-result
 sealed abstract class Result
 final case class IntResult(value: Int) extends Result
 final case class StrResult(value: String) extends Result
@@ -33,6 +35,18 @@ object Interpreter {
     case StrToInt(e_)   => handleStrToInt(e_)
   }
   //snippet:end
+
+  {
+    //snippet:initial-tagged-interp-wrong
+    def interp(e: Expr): Any = e match {
+      case IntLit(value: Int)    => value
+      case StrLit(value: String) => value
+      case Add(StrLit(_), e2)    => ???
+      case _                     => ???
+    }
+    //snippet:end
+
+  }
 
   //snippet:initial-tagged-add
   private[this] def handleAdd(e1: Expr, e2: Expr): Either[String, Result] =

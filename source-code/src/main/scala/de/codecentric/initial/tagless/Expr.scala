@@ -20,8 +20,8 @@ object Interpreter {
   //snippet:initial-tagless-interp
   def interp[A](e: Expr[A]): A = e match {
     case IntLit(value)  => value
-    case Add(e1, e2)    => handleAdd(e1, e2)
     case StrLit(value)  => value
+    case Add(e1, e2)    => handleAdd(e1, e2)
     case Concat(e1, e2) => handleConcat(e1, e2)
     case StrToInt(e_)   => handleStrToInt(e_)
   }

@@ -23,7 +23,7 @@
 
 % Minted configuration for source code highlighting
 \usepackage{minted}
-\setminted{highlightcolor=orange!50, linenos}
+\setminted{highlightcolor=orange!30, linenos}
 \setminted{style=lovelace}
 
 \usepackage[listings, minted]{tcolorbox}
@@ -57,19 +57,30 @@
   \item start with the basics from Oleg's excellent paper
   \item \href{http://okmij.org/ftp/tagless-final/course/index.html}{Typed tagless-final interpretations: Lecture notes}
   \item clarify tagged, tagless, initial and final
-  \item relation to Free-X constructions
+  \item extensibility
+  \item inspection and transformation of programs
+  \item Free-X and MTL vs initial and final
   \item comparison of both approaches
   \end{itemize}
 \end{frame}
 
 \begin{frame}
+  \begin{center}
+    \includegraphics[width=0.5\textwidth]{static-images/final-tagless.png}
+    \vfill
+    \href{http://okmij.org/ftp/tagless-final/course/index.html}{http://okmij.org/ftp/tagless-final/course/index.html}
+  \end{center}
+\end{frame}
+
+\begin{frame}
   \frametitle{The Toy Language}
   \begin{itemize}
-  \item toy language with operations
-  \item integer constants
-  \item integer addition
-  \item string constants
-  \item string concatenation
+  \item toy language with operations:
+  \item integer constants: \texttt{Int(42)}
+  \item integer addition: \texttt{Int(21) + Int(21)}
+  \item string constants: \texttt{Str("4")}
+  \item string concatenation: \texttt{Str("4") + Str("2")}
+  \item conversion from string to integer: \texttt{StrToInt("42")}
   \end{itemize}
 \end{frame}
 
@@ -132,6 +143,13 @@
 
 \begin{frame}[fragile]
   \frametitle{Interpreter: Initial Tagged}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagged-interp-wrong.scala}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Interpreter: Initial Tagged}
+  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagged-result.scala}
+  \vspace{5mm}
   \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagged-interp.scala}
 \end{frame}
 
@@ -170,7 +188,7 @@
 
 \begin{frame}[fragile]
   \frametitle{Interpreter: Initial Tagless}
-  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-expr.scala}
+  \inputminted[highlightlines={1}, fontsize=\footnotesize]{scala}{snippets/initial-tagless-expr.scala}
   \begin{itemize}
   \item \texttt{Expr} has a type parameter that is refined in subclasses
   \item when pattern matching, we can recover this refinement
@@ -182,14 +200,11 @@
   \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-sample.scala}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}[fragile,t]
   \frametitle{Interpreter: Initial Tagless}
   \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-interp.scala}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Interpreter: Initial Tagless}
-  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-add.scala}
+  \vspace{5mm}
+  \only<2>{\inputminted[highlightlines={1}, fontsize=\footnotesize]{scala}{snippets/initial-tagless-add.scala}}
 \end{frame}
 
 \begin{frame}
@@ -253,16 +268,19 @@
     retaining static type safety (e.g., no casts).
   \end{tcolorbox}
   \begin{itemize}
-  \item there are other solutions, but the final encoding is
-    pretty neat (IMHO)
-  \item the initial encoding equivalent is ``Data types \`{a} la carte''
+  \item 1) add new cases to datatype
+  \item 2) add new function over datatype
+  \item no recompilation + static type safety
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \begin{center}
-    \Huge
-    Case Study: Adding a pretty printer
+    {
+      \Huge
+      Case Study: Adding a pretty printer\\
+    }
+    (expression problem: add function over datatype)
   \end{center}
 \end{frame}
 
@@ -322,15 +340,19 @@
 \begin{frame}
   \frametitle{Final Encoding: Pretty Printer}
   \begin{itemize}
-  \item adding an interpreter means writing a typeclass instance
-  \item supports the introduction of new functions over the datatype
+  \item add pretty printer using newtype and typeclass instance
+  \item no need to touch any existing code
+  \item final tagless supports the introduction of new functions over the datatype
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \begin{center}
-    \Huge
-    Case Study: Adding ``if''
+    {
+      \Huge
+      Case Study: Adding ``if''\\
+    }
+    (expression problem: add cases to datatype)
   \end{center}
 \end{frame}
 
@@ -338,17 +360,17 @@
   \frametitle{Case Study: Adding ``if''}
   \begin{itemize}
   \item the goal is to add the ``if'' to our language
-  \item do it for
+  \item needed parts:
     \begin{itemize}
-    \item initial tagless
-    \item final tagless
+    \item a way to introduce booleans
+    \item the actual if construct
     \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Case Study: If with Initial Tagless}
-  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-expr-if.scala}
+  \inputminted[highlightlines={8-13}, fontsize=\footnotesize]{scala}{snippets/initial-tagless-expr-if.scala}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -358,7 +380,7 @@
 
 \begin{frame}[fragile]
   \frametitle{Case Study: If with Initial Tagless}
-  \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-tagless-interp-if.scala}
+  \inputminted[highlightlines={8}, fontsize=\footnotesize]{scala}{snippets/initial-tagless-interp-if.scala}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -501,6 +523,10 @@
 
 \begin{frame}[fragile]
   \frametitle{Initial Encoding: Inlining of Addition}
+  \begin{minted}[fontsize=\footnotesize]{scala}
+    Add(Add(IntLit(21), IntLit(21)), StrToInt(StrLit("0")))
+  \end{minted}
+  \vspace{5mm}
   \inputminted[fontsize=\footnotesize]{scala}{snippets/optimizer-inline-addition.scala}
 \end{frame}
 
@@ -564,6 +590,7 @@
   \item<1-> in a nutshell, this is the big trade-off
   \item<1-> still, you can do every optimization in final \textbf{and} initial
   \item<1-> some things are just really hard (like de-/serialization)
+  \item<1-> every inspection = run the program (overhead)
   \item<2-> State Monad anyone?
   \end{itemize}
   \vspace{3mm}
@@ -583,6 +610,7 @@
   \end{itemize}
   \tikzstyle{level 1}=[sibling distance=14em]
   \tikzstyle{level 2}=[sibling distance=7em]
+  \vspace{3mm}
   \begin{tikzpicture}[every node/.style = {shape=rectangle, rounded corners, draw, align=center}]]
     \node {Add [1,7,11]}
     child { node[fill=beamer@centricgreen] {Add [2,4,6]}
@@ -593,6 +621,7 @@
       child { node {StrLit("0") [9]} }
     };
   \end{tikzpicture}
+  \vspace{3mm}
   \begin{itemize}
   \item we should instead look ahead before traversing down
   \end{itemize}
@@ -647,7 +676,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Interpreter: Free Monad}
+  \frametitle{Interpreter: Free Monad \textemdash{} Hide Injects}
   \inputminted[fontsize=\footnotesize]{scala}{snippets/initial-free-ctors.scala}
 \end{frame}
 
@@ -676,11 +705,11 @@
 \begin{frame}
   \frametitle{MTL as Final Encoding}
   \begin{itemize}
-  \item basic idea: define type class for ``additional'' operations of a special Monad
-  \item e.g.\ accessing state, reading environment, etc.
+  \item MTL:\@ define type class for ``additional'' operations of a special Monad
+  \item e.g.\ accessing state (\texttt{MonadState}), reading environment (\texttt{MonadReader}), etc.
   \item implemented in the \texttt{mtl} package in Haskell
   \item commonly referred to as ``mtl-style''
-  \item final encoding that uses the special ops as DSL!\@
+  \item = final tagless encoding that additionally has typeclass ops
   \end{itemize}
 \end{frame}
 
@@ -706,6 +735,8 @@
   \item sequencing no longer part of our language (Monad)
   \item flexible choice of target Monad for pluggable effects
   \item we can choose between type classes easily (vs. Free-X)
+  \item for example try to combine program using \texttt{Applicative}
+    and another using \texttt{Monad} (hard using Free constructions!)
   \end{itemize}
 \end{frame}
 
@@ -714,6 +745,9 @@
   \begin{itemize}
   \item Free X = initial encoding + typeclass X
   \item MTL = final tagless + typeclass
+  \item level of introspection of programs greatly dependent on typeclass constraints
+  \item for example with \texttt{Monad}, severely crippled
+  \item advice: if you need \texttt{Monad} just go with final tagless every time
   \end{itemize}
 \end{frame}
 
@@ -752,7 +786,10 @@
   \begin{itemize}
   \item by going back and forth, you can enjoy the advantages of both approaches
   \item you don't have to commit to either in your implementations
-  \item example: write complex transformations in initial, ``compile'' back to final for repeated execution
+  \item example: write complex transformations using initial encoding,
+    ``compile'' back to final encoding for repeated execution
+  \item or: go from final tagless to initial for complex program
+    transformation, then back again
   \end{itemize}
 \end{frame}
 
@@ -821,6 +858,10 @@
     \item Datatypes \`{a} la carte: \href{https://www.cs.ru.nl/~W.Swierstra/Publications/DataTypesALaCarte.pdf}{https://www.cs.ru.nl/~W.Swierstra/Publications/DataTypesALaCarte.pdf}
     \item Source Code: \href{https://github.com/markus1189/free-vs-tagless}{https://github.com/markus1189/free-vs-tagless}
     \end{itemize}
+    \vfill
+    {
+      \Huge{}Questions?
+    }
   \end{center}
 \end{frame}
 

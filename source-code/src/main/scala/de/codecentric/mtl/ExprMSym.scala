@@ -33,7 +33,7 @@ object ExprMSym {
   }
 
   //snippet:final-mtl-interp
-  case class Interp[A](value: A) extends AnyVal
+  case class Interp[A](value: A) extends AnyVal // add Monad instance (Identity)
 
   implicit val exprSymInterp: ExprMSym[Interp] = new ExprMSym[Interp] {
     override def intLit(value: Int): Interp[Int] = Interp(value)

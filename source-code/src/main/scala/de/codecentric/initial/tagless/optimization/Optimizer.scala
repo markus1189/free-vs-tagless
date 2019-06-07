@@ -9,7 +9,7 @@ class Optimizer {
   def inlineAddition1[A](program: Expr[A]): Expr[A] = program match {
     case Add(IntLit(lhs), IntLit(rhs)) => IntLit(lhs + rhs)
     case Add(lhs, rhs)                 => Add(inlineAddition1(lhs), inlineAddition1(rhs))
-    case _                             => program
+    case _                             => program // why can we cheat here?
   }
 
   def inlineAddition[A](program: Expr[A]): Expr[A] = fixpoint[Expr[A]](program)(inlineAddition1)
